@@ -28,29 +28,29 @@ Admin paneli üzerinden sipariş ve sistem yönetimi yapılabilmektedir.
 ## Kurulum
 
 1. Projeyi indirin veya klonlayın:
-  -git clone https://github.com/efecaankara/restoran-siparis-sistemi.git
+  - git clone https://github.com/efecaankara/restoran-siparis-sistemi.git
 2. Proje klasörünü xampp/htdocs/ içine atın.
 3. XAMPP üzerinden:
-  -Apache başlat
-  -MySQL başlat
+  - Apache başlat
+  - MySQL başlat
 4. Tarayıcıdan phpMyAdmin açın:
-  -http://localhost/phpmyadmin
+  - http://localhost/phpmyadmin
 5. Yeni bir veritabanı oluşturun (örnek: restoran_db)
 6. Proje klasöründeki restoran_db.sql dosyasını içe aktarın:
-  -phpMyAdmin → Import
-  -restoran_db.sql seç → Go
+  - phpMyAdmin → Import
+  - restoran_db.sql seç → Go
 7. db.php dosyasını kontrol edin:
   $host = "localhost";
   $user = "root";
   $pass = "";
   $dbname = "restoran_db";
 8. Projeyi çalıştırın:
-  -http://localhost/restoran
+  - http://localhost/restoran
 
 ## Admin giriş bilgisi:
 
-Kullanıcı adı:admin 
-Şifre:123456
+- Kullanıcı adı:admin 
+- Şifre:123456
 
 ## Veritabanı
 
@@ -58,6 +58,6 @@ Bu projeye ait tüm tablo yapıları ve örnek veriler restoran_db.sql dosyasın
 
 ## Notlar
 
--XAMPP açık değilse proje çalışmaz
--Veritabanı import edilmeden sistem çalışmaz
--Gerekirse db.php dosyasındaki veritabanı adı değiştirilebilir
+- XAMPP açık değilse proje çalışmaz
+- Veritabanı import edilmeden sistem çalışmaz
+- Gerekirse db.php dosyasındaki veritabanı adı değiştirilebilir
