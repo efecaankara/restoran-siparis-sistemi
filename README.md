@@ -49,8 +49,8 @@ Admin paneli üzerinden sipariş ve sistem yönetimi yapılabilmektedir.
 
 ## Admin giriş bilgisi:
 
-- Kullanıcı adı:admin 
-- Şifre:123456
+- Kullanıcı adı: admin 
+- Şifre: 123456
 
 ## Veritabanı
 
