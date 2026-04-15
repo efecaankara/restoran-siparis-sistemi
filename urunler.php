@@ -146,6 +146,13 @@ if ($kategori !== "Tümü") {
         <div class="cards">
             <?php if ($result && $result->num_rows > 0): ?>
                 <?php while ($row = $result->fetch_assoc()): ?>
+                    <?php
+                        $urunId = (int)$row["id"];
+                        $stokMiktari = (int)$row["stok_miktari"];
+                        $sepettekiAdet = isset($_SESSION["cart"][$urunId]) ? (int)$_SESSION["cart"][$urunId]["adet"] : 0;
+                        $kalanStok = $stokMiktari - $sepettekiAdet;
+                    ?>
+
                     <div class="card">
                         <?php if (!empty($row["gorsel_yolu"])): ?>
                             <img src="<?php echo htmlspecialchars($row["gorsel_yolu"]); ?>" alt="<?php echo htmlspecialchars($row["urun_adi"]); ?>">
@@ -155,20 +162,13 @@ if ($kategori !== "Tümü") {
                             <div class="card-title"><?php echo htmlspecialchars($row["urun_adi"]); ?></div>
                             <div class="muted"><?php echo htmlspecialchars($row["kategori"]); ?></div>
                             <p><?php echo htmlspecialchars($row["aciklama"]); ?></p>
-                            <div class="price"><?php echo number_format($row["fiyat"], 2); ?> TL</div>
-                            <p class="muted">Kalan Stok: <?php echo max(0, $kalanStok); ?></p>
-                        
-                            <?php
-                                $sepettekiAdet = isset($_SESSION["cart"][$row["id"]]) ? (int)$_SESSION["cart"][$row["id"]]["adet"] : 0;
-                                $kalanStok = (int)$row["stok_miktari"] - $sepettekiAdet;
-                            ?>
+                            <div class="price"><?php echo number_format((float)$row["fiyat"], 2); ?> TL</div>
 
                             <?php if ($kalanStok > 0): ?>
-                                <a class="btn" href="sepete-ekle.php?id=<?php echo $row["id"]; ?>">Sepete Ekle</a>
+                                <a class="btn" href="sepete-ekle.php?id=<?php echo $urunId; ?>">Sepete Ekle</a>
                             <?php else: ?>
                                 <span class="btn" style="background:#999; cursor:not-allowed;">Tükendi</span>
                             <?php endif; ?>
-
                         </div>
                     </div>
                 <?php endwhile; ?>

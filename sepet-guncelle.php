@@ -18,9 +18,10 @@ if ($islem === "artir") {
 
     if ($result->num_rows === 1) {
         $urun = $result->fetch_assoc();
-        $stok_miktari = (int)$urun["stok_miktari"];
+        $stokMiktari = (int)$urun["stok_miktari"];
+        $sepettekiAdet = (int)$_SESSION["cart"][$id]["adet"];
 
-        if ($_SESSION["cart"][$id]["adet"] < $stok_miktari) {
+        if ($sepettekiAdet < $stokMiktari) {
             $_SESSION["cart"][$id]["adet"] += 1;
         }
     }

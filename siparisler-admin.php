@@ -55,6 +55,16 @@ $result = $conn->query($sql);
                 <?php endif; ?>
 
                 <form action="siparis-durum-guncelle.php" method="post">
+                    <?php if ($siparis["durum"] === "Tamamlandı"): ?>
+                        <br>
+                        <a 
+                            href="siparis-sil.php?id=<?php echo $siparis["id"]; ?>" 
+                            onclick="return confirm('Bu sipariş silinsin mi?')"
+                            style="display:inline-block; margin-top:10px; background:#d9534f; color:white; padding:8px 12px; text-decoration:none; border-radius:6px;"
+                        >
+                            Siparişi Sil
+                        </a>
+                    <?php endif; ?>
                     <input type="hidden" name="siparis_id" value="<?php echo $siparis["id"]; ?>">
 
                     <select name="durum">
@@ -64,6 +74,7 @@ $result = $conn->query($sql);
                     </select>
 
                     <button type="submit">Durumu Güncelle</button>
+                    
                 </form>
             </div>
         <?php endwhile; ?>
