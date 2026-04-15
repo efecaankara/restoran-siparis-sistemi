@@ -12,14 +12,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $fiyat = trim($_POST["fiyat"] ?? "");
     $gorsel_yolu = trim($_POST["gorsel_yolu"] ?? "");
     $stok_durumu = isset($_POST["stok_durumu"]) ? 1 : 0;
+    $stok_miktari = trim($_POST["stok_miktari"] ?? "0");
 
     if ($urun_adi === "" || $fiyat === "") {
         $hata = "Ürün adı ve fiyat zorunludur.";
     } elseif (!is_numeric($fiyat)) {
         $hata = "Fiyat sayısal olmalıdır.";
+    } elseif (!is_numeric($stok_miktari)) {
+        $hata = "Stok miktarı sayısal olmalıdır.";
     } else {
-        $stmt = $conn->prepare("INSERT INTO urunler (urun_adi, kategori, aciklama, fiyat, gorsel_yolu, stok_durumu) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssi", $urun_adi, $kategori, $aciklama, $fiyat, $gorsel_yolu, $stok_durumu);
+        $stmt = $conn->prepare("INSERT INTO urunler (urun_adi, kategori, aciklama, fiyat, gorsel_yolu, stok_durumu, stok_miktari) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssii", $urun_adi, $kategori, $aciklama, $fiyat, $gorsel_yolu, $stok_durumu, $stok_miktari);
 
         if ($stmt->execute()) {
             $mesaj = "Ürün başarıyla eklendi.";
@@ -67,6 +70,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <label>
             <input type="checkbox" name="stok_durumu" checked> Stokta var
         </label><br><br>
+
+        <label>Stok Miktarı:</label><br>
+        <input type="number" name="stok_miktari" min="0" value="10"><br><br>
 
         <button type="submit">Ürün Ekle</button>
     </form>
