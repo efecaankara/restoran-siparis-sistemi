@@ -49,14 +49,14 @@ Admin paneli üzerinden sipariş ve sistem yönetimi yapılabilmektedir.
 
 ## Admin giriş bilgisi:
 
--Kullanıcı adı:admin 
--Şifre:123456
+Kullanıcı adı:admin 
+Şifre:123456
 
 ## Veritabanı
 
 Bu projeye ait tüm tablo yapıları ve örnek veriler restoran_db.sql dosyasında bulunmaktadır.
 
-##Notlar
+## Notlar
 
 -XAMPP açık değilse proje çalışmaz
 -Veritabanı import edilmeden sistem çalışmaz
