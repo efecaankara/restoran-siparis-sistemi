@@ -47,14 +47,17 @@ Admin paneli üzerinden sipariş ve sistem yönetimi yapılabilmektedir.
 8. Projeyi çalıştırın:
   -http://localhost/restoran
 
-Admin giriş bilgisi:
+## Admin giriş bilgisi:
+
 -Kullanıcı adı:admin 
 -Şifre:123456
 
-Veritabanı:
+## Veritabanı
+
 Bu projeye ait tüm tablo yapıları ve örnek veriler restoran_db.sql dosyasında bulunmaktadır.
 
-Notlar
+##Notlar
+
 -XAMPP açık değilse proje çalışmaz
 -Veritabanı import edilmeden sistem çalışmaz
 -Gerekirse db.php dosyasındaki veritabanı adı değiştirilebilir
