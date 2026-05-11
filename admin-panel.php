@@ -2,6 +2,8 @@
 include "includes/auth.php";
 include "db.php";
 
+$kategori = $_GET["kategori"] ?? "Tümü";
+$arama = trim($_GET["arama"] ?? "");
 // Toplam ürün sayısı
 $urunResult = $conn->query("SELECT COUNT(*) AS toplam_urun FROM urunler");
 $toplamUrun = $urunResult->fetch_assoc()["toplam_urun"] ?? 0;

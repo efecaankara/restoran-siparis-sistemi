@@ -45,6 +45,8 @@ if (isset($_SESSION["cart"][$id])) {
     ];
 }
 
-header("Location: urunler.php");
+$return = $_GET["return"] ?? "urunler.php";
+
+header("Location: " . $return);
 exit;
 ?>

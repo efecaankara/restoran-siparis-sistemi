@@ -15,6 +15,6 @@ $result = $conn->query("SELECT * FROM urunler ORDER BY id DESC");
         <br><br>
 
         <a href="urun-duzenle.php?id=<?php echo $row["id"]; ?>">Düzenle</a> |
-        <a href="urun-sil.php?id=<?php echo $row["id"]; ?>" onclick="return confirm('Silinsin mi?')">Sil</a>
+        <a href="urun-pasif.php?id=<?php echo $row["id"]; ?>" onclick="return confirm('Bu ürün pasife alınsın mı?')">Pasife Al</a>
     </div>
 <?php endwhile; ?>

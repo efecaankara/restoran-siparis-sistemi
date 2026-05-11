@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1
--- Üretim Zamanı: 15 Nis 2026, 20:15:17
+-- Üretim Zamanı: 11 May 2026, 20:42:20
 -- Sunucu sürümü: 10.4.32-MariaDB
 -- PHP Sürümü: 8.0.30
 
@@ -58,17 +58,6 @@ CREATE TABLE `siparisler` (
   `durum` enum('Beklemede','Hazırlanıyor','Tamamlandı','İptal') DEFAULT 'Beklemede'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci;
 
---
--- Tablo döküm verisi `siparisler`
---
-
-INSERT INTO `siparisler` (`id`, `musteri_ad_soyad`, `musteri_tel`, `adres`, `masa_no`, `toplam_tutar`, `siparis_tarihi`, `durum`) VALUES
-(1, 'Efecan Kara', '05528463734', 'Fatih Mahallesi Ünverdi Caddesi NO:70 Daire:4 Esenyurt\\İstanbul', NULL, 8000.00, '2026-04-15 06:52:52', 'Tamamlandı'),
-(2, 'Efecan Kara', '05528463734', 'Fatih Mahallesi Ünverdi Caddesi NO:70 Daire:4 Esenyurt\\İstanbul', NULL, 8000.00, '2026-04-15 07:14:19', 'Tamamlandı'),
-(3, 'Efecan Kara', '05528463734', 'Fatih Mahallesi Ünverdi Caddesi NO:70 Daire:4 Esenyurt\\İstanbul', NULL, 8000.00, '2026-04-15 07:22:20', 'Tamamlandı'),
-(4, 'Efecan KARA', '05528463734', 'Fatih Mahallesi Ünverdi Caddesi NO:70 Daire:4 Esenyurt\\İstanbul', NULL, 330.00, '2026-04-15 10:22:50', 'Tamamlandı'),
-(5, 'kola stok bıtıerme', '05528463734', 'Fatih Mahallesi Ünverdi Caddesi NO:70 Daire:4 Esenyurt\\İstanbul', NULL, 80.00, '2026-04-15 10:52:46', 'Tamamlandı');
-
 -- --------------------------------------------------------
 
 --
@@ -82,31 +71,6 @@ CREATE TABLE `siparis_detay` (
   `adet` int(11) DEFAULT NULL,
   `birim_fiyat` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci;
-
---
--- Tablo döküm verisi `siparis_detay`
---
-
-INSERT INTO `siparis_detay` (`id`, `siparis_id`, `urun_id`, `adet`, `birim_fiyat`) VALUES
-(1, 1, 1, 5, 120.00),
-(2, 1, 2, 6, 150.00),
-(3, 1, 4, 10, 40.00),
-(4, 1, 5, 50, 120.00),
-(5, 1, 3, 2, 50.00),
-(6, 2, 1, 5, 120.00),
-(7, 2, 2, 6, 150.00),
-(8, 2, 4, 10, 40.00),
-(9, 2, 5, 50, 120.00),
-(10, 2, 3, 2, 50.00),
-(11, 3, 1, 5, 120.00),
-(12, 3, 2, 6, 150.00),
-(13, 3, 4, 10, 40.00),
-(14, 3, 5, 50, 120.00),
-(15, 3, 3, 2, 50.00),
-(16, 4, 5, 2, 120.00),
-(17, 4, 4, 1, 40.00),
-(18, 4, 3, 1, 50.00),
-(19, 5, 4, 2, 40.00);
 
 -- --------------------------------------------------------
 
@@ -130,11 +94,16 @@ CREATE TABLE `urunler` (
 --
 
 INSERT INTO `urunler` (`id`, `urun_adi`, `kategori`, `aciklama`, `fiyat`, `gorsel_yolu`, `stok_durumu`, `stok_miktari`) VALUES
-(1, 'Cheeseburger', 'Burger', 'Lezzetli burger', 120.00, '', 1, 10),
-(2, 'Double Burger', 'Burger', 'Çift köfte', 150.00, '', 1, 10),
-(3, 'Patates Kızartması', 'Yan Ürün', 'Çıtır patates', 50.00, '', 1, 2),
-(4, 'Cola', 'İçecek', 'Soğuk içecek', 40.00, '', 1, 5),
-(5, 'Pizza1', 'Pizza', 'Pizza', 120.00, 'images\\pizza.jpg', 1, 1);
+(1, 'Cheeseburger', 'Burger', 'Lezzetli burger', 120.00, 'images\\Burger\\cheeseburger.png\n', 1, 10),
+(2, 'Double Burger', 'Burger', 'Çift köfte', 150.00, 'images\\Burger\\double-burger.png', 1, 10),
+(3, 'Patates Kızartması', 'Yan Ürün', 'Çıtır patates', 50.00, 'images\\Yan Urun\\patates.png', 1, 2),
+(4, 'Cola', 'İçecek', 'Soğuk içecek', 40.00, 'images\\Icecek\\cola.png', 1, 5),
+(5, 'Chicken Burger', 'Burger', 'Tavuk Burger', 149.99, 'images\\Burger\\chicken-burger.png', 1, 10),
+(6, 'Tiramisu', 'Tatlı', 'Tatlı', 60.00, 'images\\Tatli\\tiramisu.png', 1, 10),
+(7, 'Fanta', 'İçecek', 'Kola', 50.00, 'images\\Icecek\\fanta.png', 1, 10),
+(8, 'Pizza Margherita', 'Pizza', 'Margarita pizza, domates, mozarella, fesleğen, zeytinyağı ve tuzla yapılan Napoli pizzasıdır.', 200.00, 'images\\Pizza\\margherita-pizza.png', 1, 10),
+(9, 'Pizza Pepperoni', 'Pizza', 'Pepperoni karakteristik olarak yumuşak, hafif isli ve parlak kırmızı renktedir. İnce dilimlenmiş pepperoni, Amerikan pizzalarında kullanılan popüler bir malzemedir.', 200.00, 'images\\Pizza\\pepperoni-pizza.png', 1, 10),
+(10, 'Sufle', 'Tatlı', 'çıkolatalı tatlı', 60.00, 'images\\Tatli\\sufle.png', 1, 10);
 
 --
 -- Dökümü yapılmış tablolar için indeksler
@@ -193,7 +162,7 @@ ALTER TABLE `siparis_detay`
 -- Tablo için AUTO_INCREMENT değeri `urunler`
 --
 ALTER TABLE `urunler`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Dökümü yapılmış tablolar için kısıtlamalar
