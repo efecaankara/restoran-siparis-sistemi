@@ -32,7 +32,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         SET urun_adi = ?, kategori = ?, aciklama = ?, fiyat = ?, gorsel_yolu = ?, stok_durumu = ?, stok_miktari = ?
         WHERE id = ?
     ");
-    $stmt->bind_param("sssssiii", $urun_adi, $kategori, $aciklama, $fiyat, $gorsel_yolu, $stok_durumu, $stok_miktari, $id);
+
+    $stmt->bind_param(
+        "sssssiii",
+        $urun_adi,
+        $kategori,
+        $aciklama,
+        $fiyat,
+        $gorsel_yolu,
+        $stok_durumu,
+        $stok_miktari,
+        $id
+    );
+
     $stmt->execute();
 
     header("Location: urunleri-yonet.php");
@@ -43,37 +55,131 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Ürün Düzenle</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ürün Düzenle</title>
+<link rel="stylesheet" href="assets/css/admin.css">
 </head>
+
 <body>
-    <h1>Ürün Düzenle</h1>
 
-    <form method="post">
-        <label>Ürün Adı:</label><br>
-        <input type="text" name="urun_adi" value="<?php echo htmlspecialchars($urun["urun_adi"]); ?>"><br><br>
+<div class="sidebar">
+    <div class="logo">GASTRO<span>NOMY</span></div>
 
-        <label>Kategori:</label><br>
-        <input type="text" name="kategori" value="<?php echo htmlspecialchars($urun["kategori"]); ?>"><br><br>
+    <div class="admin-info">
+        <strong><?php echo htmlspecialchars($_SESSION["admin_username"]); ?></strong>
+        <p>Yönetici Paneli</p>
+    </div>
 
-        <label>Açıklama:</label><br>
-        <textarea name="aciklama"><?php echo htmlspecialchars($urun["aciklama"]); ?></textarea><br><br>
+    <div class="menu">
+        <a href="admin-panel.php">📊 Yönetim Paneli</a>
+        <a href="siparisler-admin.php">🛒 Siparişler</a>
+        <a class="active" href="urunleri-yonet.php">🍔 Ürünler</a>
+        <a href="#">📂 Kategoriler</a>
+        <a href="#">👥 Kullanıcılar</a>
+        <a href="#">🎁 Kampanyalar</a>
+        <a href="#">🍽️ Masa Yönetimi</a>
+        <a href="urunler.php">🌐 Siteye Git</a>
+        <a href="logout.php">🚪 Çıkış Yap</a>
+    </div>
+</div>
 
-        <label>Fiyat:</label><br>
-        <input type="text" name="fiyat" value="<?php echo htmlspecialchars($urun["fiyat"]); ?>"><br><br>
+<div class="main">
 
-        <label>Görsel Yolu:</label><br>
-        <input type="text" name="gorsel_yolu" value="<?php echo htmlspecialchars($urun["gorsel_yolu"]); ?>"><br><br>
+    <div class="topbar">
+        <h1>Ürün Düzenle</h1>
+        <a class="back-link" href="urunleri-yonet.php">Ürünlere Dön</a>
+    </div>
 
-        <label>Stok Miktarı:</label><br>
-        <input type="number" name="stok_miktari" min="0" value="<?php echo (int)$urun["stok_miktari"]; ?>"><br><br>
+    <div class="form-card">
 
-        <label>
-            <input type="checkbox" name="stok_durumu" <?php echo $urun["stok_durumu"] ? "checked" : ""; ?>>
-            Stokta var
-        </label><br><br>
+        <form method="post">
 
-        <button type="submit">Güncelle</button>
-    </form>
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Ürün Adı</label>
+                    <input 
+                        type="text" 
+                        name="urun_adi" 
+                        value="<?php echo htmlspecialchars($urun["urun_adi"]); ?>"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <input 
+                        type="text" 
+                        name="kategori" 
+                        value="<?php echo htmlspecialchars($urun["kategori"]); ?>"
+                    >
+                </div>
+
+                <div class="form-group full">
+                    <label>Açıklama</label>
+                    <textarea name="aciklama" rows="4"><?php echo htmlspecialchars($urun["aciklama"]); ?></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Fiyat</label>
+                    <input 
+                        type="text" 
+                        name="fiyat" 
+                        value="<?php echo htmlspecialchars($urun["fiyat"]); ?>"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Stok Miktarı</label>
+                    <input 
+                        type="number" 
+                        name="stok_miktari" 
+                        min="0" 
+                        value="<?php echo (int)$urun["stok_miktari"]; ?>"
+                    >
+                </div>
+
+                <div class="form-group full">
+                    <label>Görsel Yolu</label>
+                    <input 
+                        type="text" 
+                        name="gorsel_yolu" 
+                        value="<?php echo htmlspecialchars($urun["gorsel_yolu"]); ?>"
+                    >
+                    <small>Örnek: images/double-burger.png</small>
+                </div>
+
+                <?php if (!empty($urun["gorsel_yolu"])): ?>
+                    <div class="form-group full">
+                        <label>Mevcut Görsel</label>
+                        <img 
+                            src="<?php echo htmlspecialchars($urun["gorsel_yolu"]); ?>" 
+                            alt="<?php echo htmlspecialchars($urun["urun_adi"]); ?>"
+                            style="max-width:260px; border-radius:16px;"
+                        >
+                    </div>
+                <?php endif; ?>
+
+                <div class="form-group full">
+                    <label class="checkbox-row">
+                        <input 
+                            type="checkbox" 
+                            name="stok_durumu" 
+                            <?php echo $urun["stok_durumu"] ? "checked" : ""; ?>
+                        >
+                        Ürün aktif / stokta görünsün
+                    </label>
+                </div>
+
+            </div>
+
+            <button type="submit">Güncelle</button>
+
+        </form>
+
+    </div>
+
+</div>
+
 </body>
 </html>

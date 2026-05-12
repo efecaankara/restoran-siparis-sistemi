@@ -2,8 +2,6 @@
 include "includes/auth.php";
 include "db.php";
 
-$kategori = $_GET["kategori"] ?? "Tümü";
-$arama = trim($_GET["arama"] ?? "");
 // Toplam ürün sayısı
 $urunResult = $conn->query("SELECT COUNT(*) AS toplam_urun FROM urunler");
 $toplamUrun = $urunResult->fetch_assoc()["toplam_urun"] ?? 0;
@@ -35,140 +33,152 @@ $bugunCiro = $bugunCiroResult->fetch_assoc()["bugun_ciro"] ?? 0;
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin Panel</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
 
-        .container {
-            width: 90%;
-            margin: 30px auto;
-        }
-
-        h1 {
-            margin-bottom: 10px;
-        }
-
-        .welcome {
-            margin-bottom: 20px;
-            color: #444;
-        }
-
-        .stats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: white;
-            width: 220px;
-            padding: 18px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.08);
-        }
-
-        .card h3 {
-            margin: 0 0 10px;
-            font-size: 18px;
-            color: #333;
-        }
-
-        .card p {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 0;
-            color: #ff7a00;
-        }
-
-        .menu-box {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.08);
-        }
-
-        .menu-box ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .menu-box li {
-            margin-bottom: 12px;
-        }
-
-        .menu-box a {
-            text-decoration: none;
-            color: white;
-            background: #ff7a00;
-            padding: 10px 14px;
-            border-radius: 8px;
-            display: inline-block;
-        }
-
-        .menu-box a:hover {
-            opacity: 0.9;
-        }
-    </style>
+<link rel="stylesheet" href="assets/css/admin.css">
 </head>
+
 <body>
-    <div class="container">
-        <h1>Admin Panel</h1>
-        <p class="welcome">Hoş geldin, <?php echo htmlspecialchars($_SESSION["admin_username"]); ?></p>
 
-        <div class="stats">
-            <div class="card">
-                <h3>Toplam Ürün</h3>
-                <p><?php echo $toplamUrun; ?></p>
-            </div>
+<!-- SIDEBAR -->
 
-            <div class="card">
-                <h3>Toplam Sipariş</h3>
-                <p><?php echo $toplamSiparis; ?></p>
-            </div>
+<div class="sidebar">
 
-            <div class="card">
-                <h3>Bekleyen Sipariş</h3>
-                <p><?php echo $bekleyenSiparis; ?></p>
-            </div>
+    <div class="logo">
+        GASTRO<span>NOMY</span>
+    </div>
 
-            <div class="card">
-                <h3>Hazırlanıyor</h3>
-                <p><?php echo $hazirlaniyorSiparis; ?></p>
-            </div>
+    <div class="admin-info">
+        <strong><?php echo htmlspecialchars($_SESSION["admin_username"]); ?></strong>
+        <p>Yönetici Paneli</p>
+    </div>
 
-            <div class="card">
-                <h3>Tamamlanan</h3>
-                <p><?php echo $tamamlananSiparis; ?></p>
-            </div>
+    <div class="menu">
+        <a href="admin-panel.php">📊 Yönetim Paneli</a>
+        <a href="siparisler-admin.php">🛒 Siparişler</a>
+        <a href="urunleri-yonet.php">🍔 Ürünler</a>
+        <a href="#">📂 Kategoriler</a>
+        <a href="#">👥 Kullanıcılar</a>
+        <a href="#">🎁 Kampanyalar</a>
+        <a href="#">🍽️ Masa Yönetimi</a>
+        <a href="urunler.php">🌐 Siteye Git</a>
+        <a href="logout.php">🚪 Çıkış Yap</a>
+    </div>
 
-            <div class="card">
-                <h3>Toplam Ciro</h3>
-                <p><?php echo number_format((float)$toplamCiro, 2); ?> TL</p>
-            </div>
+</div>
 
-            <div class="card">
-                <h3>Bugünkü Ciro</h3>
-                <p><?php echo number_format((float)$bugunCiro, 2); ?> TL</p>
-            </div>
-        </div>
+<!-- MAIN -->
 
-        <div class="menu-box">
-            <ul>
-                <li><a href="urun-ekle.php">Ürün Ekle</a></li>
-                <li><a href="urunleri-yonet.php">Ürünleri Yönet</a></li>
-                <li><a href="urunler.php">Ürünleri Gör</a></li>
-                <li><a href="siparisler-admin.php">Siparişleri Gör</a></li>
-                <li><a href="logout.php">Çıkış Yap</a></li>
-            </ul>
+<div class="main">
+
+    <div class="topbar">
+        <h1>Dashboard</h1>
+
+        <div class="date">
+            <?php echo date("d.m.Y"); ?>
         </div>
     </div>
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+        <div class="card">
+            <div class="card-title">Toplam Ürün</div>
+            <div class="card-value"><?php echo $toplamUrun; ?></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Toplam Sipariş</div>
+            <div class="card-value"><?php echo $toplamSiparis; ?></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Bekleyen Sipariş</div>
+            <div class="card-value orange"><?php echo $bekleyenSiparis; ?></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Hazırlanıyor</div>
+            <div class="card-value"><?php echo $hazirlaniyorSiparis; ?></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Tamamlanan</div>
+            <div class="card-value"><?php echo $tamamlananSiparis; ?></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Toplam Ciro</div>
+            <div class="card-value orange">
+                <?php echo number_format((float)$toplamCiro,2); ?> TL
+            </div>
+        </div>
+
+    </div>
+
+    <!-- QUICK ACTIONS -->
+
+    <div class="quick-actions">
+
+        <a class="action-btn" href="urun-ekle.php">
+            ➕ Yeni Ürün Ekle
+        </a>
+
+        <a class="action-btn" href="urunleri-yonet.php">
+            🍔 Ürünleri Yönet
+        </a>
+
+        <a class="action-btn" href="siparisler-admin.php">
+            🛒 Siparişleri Gör
+        </a>
+
+        <a class="action-btn" href="urunler.php">
+            🌐 Siteyi Görüntüle
+        </a>
+
+    </div>
+
+    <!-- TABLE -->
+
+    <div class="table-box">
+
+        <h2>Genel Sistem Özeti</h2>
+
+        <table>
+
+            <tr>
+                <th>Sistem</th>
+                <th>Durum</th>
+            </tr>
+
+            <tr>
+                <td>Ürün Yönetimi</td>
+                <td><span class="status tamamlandi">Aktif</span></td>
+            </tr>
+
+            <tr>
+                <td>Sipariş Sistemi</td>
+                <td><span class="status tamamlandi">Aktif</span></td>
+            </tr>
+
+            <tr>
+                <td>Ödeme Sistemi</td>
+                <td><span class="status tamamlandi">Aktif</span></td>
+            </tr>
+
+            <tr>
+                <td>Kullanıcı Sistemi</td>
+                <td><span class="status tamamlandi">Aktif</span></td>
+            </tr>
+
+        </table>
+
+    </div>
+
+</div>
+
 </body>
 </html>

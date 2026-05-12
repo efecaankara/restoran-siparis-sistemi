@@ -35,46 +35,92 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Ürün Ekle</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ürün Ekle</title>
+<link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body>
-    <h1>Ürün Ekle</h1>
-
-    <p><a href="admin-panel.php">Panele Dön</a></p>
-
+<div class="sidebar">
+    <div class="logo">GASTRO<span>NOMY</span></div>
+    <div class="admin-info">
+        <strong><?php echo htmlspecialchars($_SESSION["admin_username"]); ?></strong>
+        <p>Yönetici Paneli</p>
+    </div>
+    <div class="menu">
+        <a href="admin-panel.php">📊 Yönetim Paneli</a>
+        <a href="siparisler-admin.php">🛒 Siparişler</a>
+        <a class="active" href="urunleri-yonet.php">🍔 Ürünler</a>
+        <a href="#">📂 Kategoriler</a>
+        <a href="#">👥 Kullanıcılar</a>
+        <a href="#">🎁 Kampanyalar</a>
+        <a href="#">🍽️ Masa Yönetimi</a>
+        <a href="urunler.php">🌐 Siteye Git</a>
+        <a href="logout.php">🚪 Çıkış Yap</a>
+    </div>
+</div>
+<div class="main">
+    <div class="topbar">
+        <h1>Yeni Ürün Ekle</h1>
+        <a class="back-link" href="urunleri-yonet.php">Ürünlere Dön</a>
+    </div>
     <?php if ($mesaj): ?>
-        <p style="color:green;"><?php echo htmlspecialchars($mesaj); ?></p>
+        <div class="alert success-alert">
+            <?php echo htmlspecialchars($mesaj); ?>
+        </div>
     <?php endif; ?>
-
     <?php if ($hata): ?>
-        <p style="color:red;"><?php echo htmlspecialchars($hata); ?></p>
+        <div class="alert error-alert">
+            <?php echo htmlspecialchars($hata); ?>
+        </div>
     <?php endif; ?>
 
-    <form method="post">
-        <label>Ürün Adı:</label><br>
-        <input type="text" name="urun_adi"><br><br>
+    <div class="form-card">
 
-        <label>Kategori:</label><br>
-        <input type="text" name="kategori"><br><br>
+        <form method="post">
 
-        <label>Açıklama:</label><br>
-        <textarea name="aciklama"></textarea><br><br>
+            <div class="form-grid">
 
-        <label>Fiyat:</label><br>
-        <input type="text" name="fiyat"><br><br>
+                <div class="form-group">
+                    <label>Ürün Adı</label>
+                    <input type="text" name="urun_adi" placeholder="Örn: Double Burger">
+                </div>
 
-        <label>Görsel Yolu:</label><br>
-        <input type="text" name="gorsel_yolu"><br><br>
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <input type="text" name="kategori" placeholder="Örn: Burger">
+                </div>
 
-        <label>
-            <input type="checkbox" name="stok_durumu" checked> Stokta var
-        </label><br><br>
+                <div class="form-group full">
+                    <label>Açıklama</label>
+                    <textarea name="aciklama" rows="4" placeholder="Ürün açıklaması"></textarea>
+                </div>
 
-        <label>Stok Miktarı:</label><br>
-        <input type="number" name="stok_miktari" min="0" value="10"><br><br>
+                <div class="form-group">
+                    <label>Fiyat</label>
+                    <input type="text" name="fiyat" placeholder="Örn: 180">
+                </div>
 
-        <button type="submit">Ürün Ekle</button>
-    </form>
+                <div class="form-group">
+                    <label>Stok Miktarı</label>
+                    <input type="number" name="stok_miktari" min="0" value="10">
+                </div>
+
+                <div class="form-group full">
+                    <label>Görsel Yolu</label>
+                    <input type="text" name="gorsel_yolu" placeholder="Örn: images/Burger/double-burger.png">
+                </div>
+
+                <div class="form-group full">
+                    <label class="checkbox-row">
+                        <input type="checkbox" name="stok_durumu" checked>
+                        Ürün aktif / stokta görünsün
+                    </label>
+                </div>
+            </div>
+            <button type="submit">Ürün Ekle</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>
