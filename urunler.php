@@ -10,22 +10,38 @@ $aramaYapildi = $arama !== "";
 $kategorilerResult = $conn->query("SELECT DISTINCT kategori FROM urunler ORDER BY kategori ASC");
 
 if ($kategori !== "Tümü" && $arama !== "") {
-    $stmt = $conn->prepare("SELECT * FROM urunler WHERE kategori = ? AND urun_adi LIKE ? ORDER BY id DESC");
+    $stmt = $conn->prepare("
+        SELECT * FROM urunler 
+        WHERE kategori = ? 
+        AND (urun_adi LIKE ? OR kategori LIKE ?)
+        ORDER BY id DESC
+    ");
     $like = "%".$arama."%";
-    $stmt->bind_param("ss", $kategori, $like);
+    $stmt->bind_param("sss", $kategori, $like, $like);
     $stmt->execute();
     $result = $stmt->get_result();
+
 } elseif ($kategori !== "Tümü") {
-    $stmt = $conn->prepare("SELECT * FROM urunler WHERE kategori = ? ORDER BY id DESC");
+    $stmt = $conn->prepare("
+        SELECT * FROM urunler 
+        WHERE kategori = ? 
+        ORDER BY id DESC
+    ");
     $stmt->bind_param("s", $kategori);
     $stmt->execute();
     $result = $stmt->get_result();
+
 } elseif ($arama !== "") {
-    $stmt = $conn->prepare("SELECT * FROM urunler WHERE urun_adi LIKE ? ORDER BY id DESC");
+    $stmt = $conn->prepare("
+        SELECT * FROM urunler 
+        WHERE urun_adi LIKE ? OR kategori LIKE ?
+        ORDER BY id DESC
+    ");
     $like = "%".$arama."%";
-    $stmt->bind_param("s", $like);
+    $stmt->bind_param("ss", $like, $like);
     $stmt->execute();
     $result = $stmt->get_result();
+
 } else {
     $result = $conn->query("SELECT * FROM urunler ORDER BY id DESC");
 }
@@ -49,10 +65,10 @@ $sepetAdet = isset($_SESSION["cart"]) ? array_sum(array_column($_SESSION["cart"]
     <div class="logo">GASTRO<span>NOMY</span></div>
 
     <div class="nav-links">
-        <a href="#top">MENÜ</a>
-        <a href="#one-cikanlar">ÖNE ÇIKANLAR</a>
-        <a href="#kategoriler">KATEGORİLER</a>
-        <a href="#menu">TÜM MENÜ</a>
+        <a href="urunler.php">MENÜ</a>
+        <a href="urunler.php#one-cikanlar">ÖNE ÇIKANLAR</a>
+        <a href="urunler.php#kategoriler">KATEGORİLER</a>
+        <a href="urunler.php#menu">TÜM MENÜ</a>
     </div>
 
     <form class="search-box" method="get" action="urunler.php#menu">
@@ -153,6 +169,8 @@ $sepetAdet = isset($_SESSION["cart"]) ? array_sum(array_column($_SESSION["cart"]
         <h2>
             <?php if ($aramaYapildi): ?>
                 "<?php echo htmlspecialchars($arama); ?>" için arama sonuçları
+            <?php elseif ($kategori !== "Tümü"): ?>
+                <?php echo htmlspecialchars($kategori); ?> Ürünleri    
             <?php else: ?>
                 Tüm Menü
             <?php endif; ?>

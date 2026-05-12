@@ -1,5 +1,6 @@
 <?php
 session_start();
+include "db.php";
 
 $cart = $_SESSION["cart"] ?? [];
 $toplam = 0;
@@ -12,6 +13,8 @@ if (empty($cart)) {
     header("Location: sepet.php");
     exit;
 }
+
+$masalar = $conn->query("SELECT * FROM masalar WHERE durum = 'Boş' ORDER BY id ASC");
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -19,33 +22,9 @@ if (empty($cart)) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ödeme</title>
-
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const paymentRadios = document.querySelectorAll('input[name="odeme_yontemi"]');
-    const cardFields = document.getElementById("cardFields");
 
-    function toggleCardFields() {
-        const selectedRadio = document.querySelector('input[name="odeme_yontemi"]:checked');
-
-        if (!selectedRadio || !cardFields) return;
-
-        if (selectedRadio.value === "Kart ile Ödeme") {
-            cardFields.style.display = "block";
-        } else {
-            cardFields.style.display = "none";
-        }
-    }
-
-    paymentRadios.forEach(function (radio) {
-        radio.addEventListener("change", toggleCardFields);
-    });
-
-    toggleCardFields();
-});
-</script>
 <body>
 
 <nav class="navbar">
@@ -79,26 +58,58 @@ document.addEventListener("DOMContentLoaded", function () {
                         required
                     >
 
-                    <textarea name="adres" rows="5" placeholder="Teslimat Adresi" required></textarea>
+                    <div class="payment-options">
+                        <label class="payment-card">
+                            <input type="radio" name="siparis_tipi" value="Paket Servis" checked>
+                            <span>Paket Servis</span>
+                        </label>
+
+                        <label class="payment-card">
+                            <input type="radio" name="siparis_tipi" value="Masa Siparişi">
+                            <span>Masa Siparişi</span>
+                        </label>
+                    </div>
+
+                    <div id="adresAlani">
+                        <textarea name="adres" rows="5" placeholder="Teslimat Adresi"></textarea>
+                    </div>
+
+                    <div id="masaAlani" style="display:none;">
+                        <select name="masa_no">
+                            <option value="">Masa Seçiniz</option>
+
+                            <?php if ($masalar && $masalar->num_rows > 0): ?>
+                                <?php while ($masa = $masalar->fetch_assoc()): ?>
+                                    <option value="<?php echo htmlspecialchars($masa["masa_adi"]); ?>">
+                                        <?php echo htmlspecialchars($masa["masa_adi"]); ?>
+                                    </option>
+                                <?php endwhile; ?>
+                            <?php endif; ?>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="payment-options">
-                    <label class="payment-card">
-                        <input type="radio" name="odeme_yontemi" value="Kapıda Ödeme" checked>
-                        <span>Kapıda Ödeme</span>
-                    </label>
+                <div class="card">
+                    <h2>Ödeme Yöntemi</h2>
 
-                    <label class="payment-card">
-                        <input type="radio" name="odeme_yontemi" value="Kart ile Ödeme">
-                        <span>Kart ile Ödeme</span>
-                    </label>
-                </div>
+                    <div class="payment-options">
+                        <label class="payment-card">
+                            <input type="radio" name="odeme_yontemi" value="Kapıda Ödeme" checked>
+                            <span>Kapıda Ödeme</span>
+                        </label>
 
-                <div id="cardFields" class="card-fields">
-                    <input type="text" name="kart_no" placeholder="Kart Numarası">
-                    <div class="card-row">
-                        <input type="text" name="son_kullanma" placeholder="AA/YY">
-                        <input type="text" name="cvv" placeholder="CVV">
+                        <label class="payment-card">
+                            <input type="radio" name="odeme_yontemi" value="Kart ile Ödeme">
+                            <span>Kart ile Ödeme</span>
+                        </label>
+                    </div>
+
+                    <div id="cardFields" class="card-fields">
+                        <input type="text" name="kart_no" placeholder="Kart Numarası">
+                        <div class="card-row">
+                            <input type="text" name="son_kullanma" placeholder="AA/YY">
+                            <input type="text" name="cvv" placeholder="CVV">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -138,6 +149,58 @@ document.addEventListener("DOMContentLoaded", function () {
         </div>
     </form>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const paymentRadios = document.querySelectorAll('input[name="odeme_yontemi"]');
+    const cardFields = document.getElementById("cardFields");
+
+    const orderTypeRadios = document.querySelectorAll('input[name="siparis_tipi"]');
+    const adresAlani = document.getElementById("adresAlani");
+    const masaAlani = document.getElementById("masaAlani");
+    const adresTextarea = document.querySelector('textarea[name="adres"]');
+    const masaSelect = document.querySelector('select[name="masa_no"]');
+
+    function toggleCardFields() {
+        const selectedRadio = document.querySelector('input[name="odeme_yontemi"]:checked');
+
+        if (!selectedRadio || !cardFields) return;
+
+        cardFields.style.display = selectedRadio.value === "Kart ile Ödeme" ? "block" : "none";
+    }
+
+    function toggleOrderType() {
+        const selectedType = document.querySelector('input[name="siparis_tipi"]:checked');
+
+        if (!selectedType) return;
+
+        if (selectedType.value === "Masa Siparişi") {
+            adresAlani.style.display = "none";
+            masaAlani.style.display = "block";
+
+            adresTextarea.removeAttribute("required");
+            masaSelect.setAttribute("required", "required");
+        } else {
+            adresAlani.style.display = "block";
+            masaAlani.style.display = "none";
+
+            adresTextarea.setAttribute("required", "required");
+            masaSelect.removeAttribute("required");
+        }
+    }
+
+    paymentRadios.forEach(function (radio) {
+        radio.addEventListener("change", toggleCardFields);
+    });
+
+    orderTypeRadios.forEach(function (radio) {
+        radio.addEventListener("change", toggleOrderType);
+    });
+
+    toggleCardFields();
+    toggleOrderType();
+});
+</script>
 
 </body>
 </html>

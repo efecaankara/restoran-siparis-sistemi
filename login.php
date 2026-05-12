@@ -19,7 +19,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
 
-            if (password_verify($password, $user["password"])) {
+            if ((int)$user["durum"] === 0) {
+                $hata = "Hesabınız pasif durumdadır.";
+            } elseif (password_verify($password, $user["password"])) {
                 $_SESSION["user_id"] = $user["id"];
                 $_SESSION["user_name"] = $user["ad_soyad"];
                 $_SESSION["user_email"] = $user["email"];
@@ -42,86 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Giriş Yap</title>
-<style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
-}
-
-.auth-wrapper {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 30px;
-}
-
-.auth-card {
-    width: 100%;
-    max-width: 430px;
-    background: white;
-    padding: 35px;
-    border-radius: 20px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-}
-
-.logo {
-    font-size: 28px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.logo span {
-    color: #ff7a00;
-}
-
-h1 {
-    text-align: center;
-    margin-bottom: 22px;
-}
-
-input {
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    border: 1px solid #ddd;
-    margin-bottom: 14px;
-    font-size: 14px;
-}
-
-button {
-    width: 100%;
-    background: #ff7a00;
-    border: none;
-    color: white;
-    padding: 15px;
-    border-radius: 12px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.link {
-    text-align: center;
-    margin-top: 18px;
-}
-
-.link a {
-    color: #ff7a00;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.error {
-    background: #ffe1e1;
-    color: #b00000;
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 14px;
-}
-</style>
+<link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
 

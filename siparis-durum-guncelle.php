@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 $siparis_id = (int)($_POST["siparis_id"] ?? 0);
 $durum = trim($_POST["durum"] ?? "");
 
-$izinliDurumlar = ["Beklemede", "Hazırlanıyor", "Tamamlandı"];
+$izinliDurumlar = ["Beklemede", "Hazırlanıyor", "Yolda", "Teslim Edildi", "İptal Edildi"];
 
 if ($siparis_id <= 0 || !in_array($durum, $izinliDurumlar, true)) {
     die("Geçersiz veri.");

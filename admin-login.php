@@ -37,24 +37,39 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin Giriş</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Giriş</title>
+<link rel="stylesheet" href="assets/css/site.css">
 </head>
+
 <body>
-    <h1>Admin Giriş</h1>
 
-    <?php if ($hata): ?>
-        <p style="color:red;"><?php echo htmlspecialchars($hata); ?></p>
-    <?php endif; ?>
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="logo">GASTRO<span>NOMY</span></div>
 
-    <form method="post">
-        <label>Kullanıcı Adı:</label><br>
-        <input type="text" name="username"><br><br>
+        <h1>Admin Giriş</h1>
 
-        <label>Şifre:</label><br>
-        <input type="password" name="password"><br><br>
+        <?php if ($hata): ?>
+            <div class="error">
+                <?php echo htmlspecialchars($hata); ?>
+            </div>
+        <?php endif; ?>
 
-        <button type="submit">Giriş Yap</button>
-    </form>
+        <form method="post">
+            <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+
+            <input type="password" name="password" placeholder="Şifre" required>
+
+            <button type="submit">Giriş Yap</button>
+        </form>
+
+        <div class="link">
+            <a href="urunler.php">Siteye Dön</a>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

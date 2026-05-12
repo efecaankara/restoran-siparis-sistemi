@@ -16,10 +16,20 @@ if (empty($cart)) {
 $musteri_ad_soyad = trim($_POST["musteri_ad_soyad"] ?? "");
 $musteri_tel = trim($_POST["musteri_tel"] ?? "");
 $adres = trim($_POST["adres"] ?? "");
+$siparis_tipi = trim($_POST["siparis_tipi"] ?? "Paket Servis");
+$masa_no = trim($_POST["masa_no"] ?? "");
 $odeme_yontemi = trim($_POST["odeme_yontemi"] ?? "Kapıda Ödeme");
 
-if ($musteri_ad_soyad === "" || $musteri_tel === "" || $adres === "") {
+if ($musteri_ad_soyad === "" || $musteri_tel === "") {
     die("Lütfen tüm alanları doldurun.");
+}
+
+if ($siparis_tipi === "Paket Servis" && $adres === "") {
+    die("Lütfen teslimat adresini girin.");
+}
+
+if ($siparis_tipi === "Masa Siparişi" && $masa_no === "") {
+    die("Lütfen masa seçin.");
 }
 
 $toplam_tutar = 0;
@@ -35,20 +45,23 @@ try {
     $odeme_yontemi = trim($_POST["odeme_yontemi"] ?? "Kapıda Ödeme");
     
     $stmtSiparis = $conn->prepare("
-        INSERT INTO siparisler (user_id, musteri_ad_soyad, musteri_tel, adres, toplam_tutar, odeme_yontemi)
-        VALUES (?, ?, ?, ?, ?, ?)
-    ");
+        INSERT INTO siparisler (user_id, musteri_ad_soyad, musteri_tel, adres, masa_no, toplam_tutar, odeme_yontemi) VALUES (?, ?, ?, ?, ?, ?, ?)");
     
     if (!$stmtSiparis) {
         throw new Exception("Sipariş sorgusu hazırlanamadı: " . $conn->error);
     }
-    $stmtSiparis->bind_param("isssds",$user_id,$musteri_ad_soyad,$musteri_tel,$adres,$toplam_tutar,$odeme_yontemi);
+    $stmtSiparis->bind_param("issssds",$user_id,$musteri_ad_soyad,$musteri_tel,$adres,$masa_no,$toplam_tutar,$odeme_yontemi);
 
     if (!$stmtSiparis->execute()) {
         throw new Exception("Sipariş ana kaydı oluşturulamadı: " . $stmtSiparis->error);
     }
 
     $siparis_id = $conn->insert_id;
+        if ($siparis_tipi === "Masa Siparişi" && $masa_no !== "") {
+            $stmtMasa = $conn->prepare("UPDATE masalar SET durum = 'Dolu' WHERE masa_adi = ?");
+            $stmtMasa->bind_param("s", $masa_no);
+            $stmtMasa->execute();
+        }
 
         $stmtDetay = $conn->prepare("
             INSERT INTO siparis_detay (siparis_id, urun_id, adet, birim_fiyat)

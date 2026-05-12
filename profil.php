@@ -11,7 +11,7 @@ $user_id = (int)$_SESSION["user_id"];
 
 $aktifStmt = $conn->prepare("
     SELECT * FROM siparisler
-    WHERE user_id = ? AND durum IN ('Beklemede', 'Hazırlanıyor')
+    WHERE user_id = ? AND durum IN ('Beklemede', 'Hazırlanıyor', 'Yolda')
     ORDER BY id DESC
 ");
 $aktifStmt->bind_param("i", $user_id);
@@ -20,7 +20,7 @@ $aktifResult = $aktifStmt->get_result();
 
 $gecmisStmt = $conn->prepare("
     SELECT * FROM siparisler
-    WHERE user_id = ? AND durum = 'Tamamlandı'
+    WHERE user_id = ? AND durum IN ('Teslim Edildi', 'İptal Edildi')
     ORDER BY id DESC
 ");
 $gecmisStmt->bind_param("i", $user_id);
@@ -30,7 +30,9 @@ $gecmisResult = $gecmisStmt->get_result();
 function durumClass($durum) {
     if ($durum === "Beklemede") return "beklemede";
     if ($durum === "Hazırlanıyor") return "hazirlaniyor";
-    if ($durum === "Tamamlandı") return "tamamlandi";
+    if ($durum === "Yolda") return "yolda";
+    if ($durum === "Teslim Edildi") return "teslimedildi";
+    if ($durum === "İptal Edildi") return "iptaledildi";
     return "";
 }
 ?>
@@ -133,6 +135,11 @@ function durumClass($durum) {
                         </div>
                     </div>
                 </div>
+                <?php if ($siparis["durum"] === "Beklemede" || $siparis["durum"] === "Hazırlanıyor"): ?>
+                    <a class="cancel-order-btn" href="siparis-iptal.php?id=<?php echo (int)$siparis["id"]; ?>" onclick="return confirm('Bu siparişi iptal etmek istediğinize emin misiniz?')">
+                        Siparişi İptal Et
+                    </a>
+                <?php endif; ?>
             </div>
             <?php $aktifSira++; ?>
         <?php endwhile; ?>

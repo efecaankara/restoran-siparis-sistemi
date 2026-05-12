@@ -29,10 +29,9 @@ $result = $conn->query("SELECT * FROM urunler ORDER BY id DESC");
         <a href="admin-panel.php">📊 Yönetim Paneli</a>
         <a href="siparisler-admin.php">🛒 Siparişler</a>
         <a class="active" href="urunleri-yonet.php">🍔 Ürünler</a>
-        <a href="#">📂 Kategoriler</a>
-        <a href="#">👥 Kullanıcılar</a>
-        <a href="#">🎁 Kampanyalar</a>
-        <a href="#">🍽️ Masa Yönetimi</a>
+        <a href="kategoriler-admin.php">📂 Kategoriler</a>
+        <a href="kullanicilar-admin.php">👥 Kullanıcılar</a>
+        <a href="masa-yonetimi.php">🍽️ Masa Yönetimi</a>
         <a href="urunler.php">🌐 Siteye Git</a>
         <a href="logout.php">🚪 Çıkış Yap</a>
     </div>

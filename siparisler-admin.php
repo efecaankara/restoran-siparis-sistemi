@@ -8,7 +8,9 @@ $result = $conn->query($sql);
 function durumClass($durum) {
     if ($durum === "Beklemede") return "beklemede";
     if ($durum === "Hazırlanıyor") return "hazirlaniyor";
-    if ($durum === "Tamamlandı") return "tamamlandi";
+    if ($durum === "Yolda") return "yolda";
+    if ($durum === "Teslim Edildi") return "teslimedildi";
+    if ($durum === "İptal Edildi") return "iptaledildi";
     return "";
 }
 ?>
@@ -36,10 +38,9 @@ function durumClass($durum) {
         <a href="admin-panel.php">📊 Yönetim Paneli</a>
         <a class="active" href="siparisler-admin.php">🛒 Siparişler</a>
         <a href="urunleri-yonet.php">🍔 Ürünler</a>
-        <a href="#">📂 Kategoriler</a>
-        <a href="#">👥 Kullanıcılar</a>
-        <a href="#">🎁 Kampanyalar</a>
-        <a href="#">🍽️ Masa Yönetimi</a>
+        <a href="kategoriler-admin.php">📂 Kategoriler</a>
+        <a href="kullanicilar-admin.php">👥 Kullanıcılar</a>
+        <a href="masa-yonetimi.php">🍽️ Masa Yönetimi</a>
         <a href="urunler.php">🌐 Siteye Git</a>
         <a href="logout.php">🚪 Çıkış Yap</a>
     </div>
@@ -139,13 +140,15 @@ function durumClass($durum) {
                         <select name="durum">
                             <option value="Beklemede" <?php echo $siparis["durum"] === "Beklemede" ? "selected" : ""; ?>>Beklemede</option>
                             <option value="Hazırlanıyor" <?php echo $siparis["durum"] === "Hazırlanıyor" ? "selected" : ""; ?>>Hazırlanıyor</option>
-                            <option value="Tamamlandı" <?php echo $siparis["durum"] === "Tamamlandı" ? "selected" : ""; ?>>Tamamlandı</option>
+                            <option value="Yolda" <?php echo $siparis["durum"] === "Yolda" ? "selected" : ""; ?>>Yolda</option>
+                            <option value="Teslim Edildi" <?php echo $siparis["durum"] === "Teslim Edildi" ? "selected" : ""; ?>>Teslim Edildi</option>
+                            <option value="İptal Edildi" <?php echo $siparis["durum"] === "İptal Edildi" ? "selected" : "";?>>İptal Edildi</option>
                         </select>
 
                         <button type="submit">Durumu Güncelle</button>
                     </form>
 
-                    <?php if ($siparis["durum"] === "Tamamlandı"): ?>
+                    <?php if ($siparis["durum"] === "Teslim Edildi" || $siparis["durum"] === "İptal Edildi"): ?>
                         <a 
                             class="delete-btn"
                             href="siparis-sil.php?id=<?php echo $siparis["id"]; ?>" 
