@@ -28,11 +28,11 @@ section {
 .navbar {
     background: #111;
     color: white;
-    padding: 18px 6%;
+    padding: 14px 6%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 18px;
+    gap: 24px;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -107,7 +107,8 @@ button,
 
 .nav-links {
     display: flex;
-    gap: 20px;
+    align-items: center;
+    gap: 24px;
 }
 
 .nav-links a {
@@ -123,7 +124,8 @@ button,
     border: 1px solid #333;
     border-radius: 12px;
     overflow: hidden;
-    min-width: 300px;
+    width: 420px;
+    max-width: 100%;
 }
 
 .search-box input {
@@ -145,6 +147,7 @@ button,
     display: flex;
     align-items: center;
     gap: 10px;
+    white-space: nowrap;
 }
 
 .cart-count {
@@ -926,10 +929,10 @@ body {
 }
 
 .logo {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: bold;
-    text-align: center;
-    margin-bottom: 25px;
+    margin: 0;
+    white-space: nowrap;
 }
 
 .logo span {

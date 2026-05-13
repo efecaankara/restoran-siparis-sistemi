@@ -18,9 +18,16 @@ $kategori = $result->fetch_assoc();
 if ($kategori) {
     $kategori_adi = $kategori["kategori_adi"];
 
-    $stmtUpdate = $conn->prepare("UPDATE urunler SET kategori = '' WHERE kategori = ?");
-    $stmtUpdate->bind_param("s", $kategori_adi);
-    $stmtUpdate->execute();
+    $stmtKontrol = $conn->prepare("SELECT COUNT(*) AS urun_sayisi FROM urunler WHERE kategori = ?");
+    $stmtKontrol->bind_param("s", $kategori_adi);
+    $stmtKontrol->execute();
+    $kontrolResult = $stmtKontrol->get_result();
+    $kontrol = $kontrolResult->fetch_assoc();
+
+    if ((int)$kontrol["urun_sayisi"] > 0) {
+        header("Location: kategoriler-admin.php?hata=urun_var");
+        exit;
+    }
 
     $stmtDelete = $conn->prepare("DELETE FROM kategoriler WHERE id = ?");
     $stmtDelete->bind_param("i", $id);

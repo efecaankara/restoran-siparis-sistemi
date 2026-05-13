@@ -148,15 +148,6 @@ function durumClass($durum) {
                         <button type="submit">Durumu Güncelle</button>
                     </form>
 
-                    <?php if ($siparis["durum"] === "Teslim Edildi" || $siparis["durum"] === "İptal Edildi"): ?>
-                        <a 
-                            class="delete-btn"
-                            href="siparis-sil.php?id=<?php echo $siparis["id"]; ?>" 
-                            onclick="return confirm('Bu tamamlanan sipariş silinsin mi?')"
-                        >
-                            Siparişi Sil
-                        </a>
-                    <?php endif; ?>
                 </div>
 
             </div>

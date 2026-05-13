@@ -4,6 +4,13 @@ include "db.php";
 
 $mesaj = "";
 $hata = "";
+if (isset($_GET["hata"]) && $_GET["hata"] === "aktif_siparis") {
+    $hata = "Bu masada aktif sipariş olduğu için silinemez.";
+}
+if (isset($_GET["mesaj"]) && $_GET["mesaj"] === "eklendi") {
+    $mesaj = "Masa başarıyla eklendi.";
+}
+
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $masa_adi = trim($_POST["masa_adi"] ?? "");
@@ -15,7 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->bind_param("s", $masa_adi);
 
         if ($stmt->execute()) {
-            $mesaj = "Masa başarıyla eklendi.";
+            header("Location: masa-yonetimi.php?mesaj=eklendi");
+            exit;
         } else {
             $hata = "Masa eklenirken hata oluştu.";
         }
@@ -90,17 +98,28 @@ $result = $conn->query("SELECT * FROM masalar ORDER BY id ASC");
                 <?php while ($masa = $result->fetch_assoc()): ?>
 
                     <div class="masa-card <?php echo $masa["durum"] === "Dolu" ? "masa-dolu" : "masa-bos"; ?>">
+
                         <h3><?php echo htmlspecialchars($masa["masa_adi"]); ?></h3>
 
                         <p><?php echo htmlspecialchars($masa["durum"]); ?></p>
 
-                        <a 
-                            class="btn <?php echo $masa["durum"] === "Dolu" ? "edit-btn" : "passive-btn"; ?>"
-                            href="masa-durum.php?id=<?php echo (int)$masa["id"]; ?>"
-                            onclick="return confirm('Masa durumu değiştirilsin mi?')"
-                        >
-                            <?php echo $masa["durum"] === "Dolu" ? "Boş Yap" : "Dolu Yap"; ?>
-                        </a>
+                        <div class="masa-actions">
+
+                            <a 
+                                class="btn <?php echo $masa["durum"] === "Dolu" ? "edit-btn" : "passive-btn"; ?>"
+                                href="masa-durum.php?id=<?php echo (int)$masa["id"]; ?>"
+                                onclick="return confirm('Masa durumu değiştirilsin mi?')">
+                                <?php echo $masa["durum"] === "Dolu" ? "Boş Yap" : "Dolu Yap"; ?>
+                            </a>
+                            <a 
+                                class="btn delete-btn"
+                                href="masa-sil.php?id=<?php echo (int)$masa["id"]; ?>"
+                                onclick="return confirm('Bu masa silinsin mi?')">
+                                Sil
+                            </a>
+
+                        </div>
+
                     </div>
 
                 <?php endwhile; ?>

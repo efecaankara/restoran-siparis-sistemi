@@ -4,6 +4,9 @@ include "db.php";
 
 $mesaj = "";
 $hata = "";
+if (isset($_GET["hata"]) && $_GET["hata"] === "urun_var") {
+    $hata = "Bu kategoriye bağlı ürün olduğu için kategori silinemez.";
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $kategori_adi = trim($_POST["kategori_adi"] ?? "");
@@ -11,28 +14,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($kategori_adi === "") {
         $hata = "Kategori adı boş bırakılamaz.";
     } else {
-        $stmt = $conn->prepare("
-            INSERT INTO urunler (urun_adi, kategori, aciklama, fiyat, gorsel_yolu, stok_durumu, stok_miktari)
-            VALUES (?, ?, '', 0, '', 0, 0)
-        ");
-
-        $urun_adi = "Kategori: " . $kategori_adi;
-        $stmt->bind_param("ss", $urun_adi, $kategori_adi);
+        $stmt = $conn->prepare("INSERT INTO kategoriler (kategori_adi) VALUES (?)");
+        $stmt->bind_param("s", $kategori_adi);
 
         if ($stmt->execute()) {
-            $mesaj = "Kategori eklendi. Bu kategoriye ürün ekleyebilirsiniz.";
+            $mesaj = "Kategori başarıyla eklendi.";
         } else {
-            $hata = "Kategori eklenirken hata oluştu.";
+            $hata = "Bu kategori zaten mevcut olabilir.";
         }
     }
 }
 
 $result = $conn->query("
-    SELECT kategori, COUNT(*) AS urun_sayisi
-    FROM urunler
-    WHERE kategori IS NOT NULL AND kategori != ''
-    GROUP BY kategori
-    ORDER BY kategori ASC
+    SELECT 
+        k.id,
+        k.kategori_adi,
+        COUNT(u.id) AS urun_sayisi
+    FROM kategoriler k
+    LEFT JOIN urunler u ON u.kategori = k.kategori_adi
+    GROUP BY k.id, k.kategori_adi
+    ORDER BY k.kategori_adi ASC
 ");
 ?>
 <!DOCTYPE html>
@@ -107,15 +108,14 @@ $result = $conn->query("
             <?php if ($result && $result->num_rows > 0): ?>
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($row["kategori"]); ?></td>
+                        <td><?php echo htmlspecialchars($row["kategori_adi"]); ?></td>
                         <td><?php echo (int)$row["urun_sayisi"]; ?></td>
                         <td>
                             <a 
                                 class="delete-btn"
-                                href="kategori-sil.php?kategori=<?php echo urlencode($row["kategori"]); ?>"
-                                onclick="return confirm('Bu kategori silinsin mi? Ürünler kategorisiz kalacak.')"
-                            >
-                                Sil
+                                href="kategori-sil.php?id=<?php echo (int)$row["id"]; ?>"
+                                onclick="return confirm('Bu kategori silinsin mi? Ürünler kategorisiz kalacak.')">
+                                    Sil
                             </a>
                         </td>
                     </tr>

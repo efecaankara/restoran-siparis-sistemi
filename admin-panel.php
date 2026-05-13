@@ -6,11 +6,11 @@ include "db.php";
 $urunResult = $conn->query("SELECT COUNT(*) AS toplam_urun FROM urunler");
 $toplamUrun = $urunResult->fetch_assoc()["toplam_urun"] ?? 0;
 
-// Toplam sipariş sayısı
+// Toplam sıparis sayısı
 $siparisResult = $conn->query("SELECT COUNT(*) AS toplam_siparis FROM siparisler");
 $toplamSiparis = $siparisResult->fetch_assoc()["toplam_siparis"] ?? 0;
 
-// Bekleyen sipariş sayısı
+// Bekleyen sıparis sayısı
 $bekleyenResult = $conn->query("SELECT COUNT(*) AS bekleyen_siparis FROM siparisler WHERE durum = 'Beklemede'");
 $bekleyenSiparis = $bekleyenResult->fetch_assoc()["bekleyen_siparis"] ?? 0;
 
@@ -31,13 +31,24 @@ $iptalResult = $conn->query("SELECT COUNT(*) AS iptal_siparis FROM siparisler WH
 $iptalSiparis = $iptalResult->fetch_assoc()["iptal_siparis"] ?? 0;
 
 // Toplam ciro
-$ciroResult = $conn->query("SELECT SUM(toplam_tutar) AS toplam_ciro FROM siparisler");
+$ciroResult = $conn->query("
+    SELECT SUM(toplam_tutar) AS toplam_ciro 
+    FROM siparisler
+    WHERE durum != 'İptal Edildi'
+");
+
 $toplamCiro = $ciroResult->fetch_assoc()["toplam_ciro"] ?? 0;
 
-// Bugünkü ciro
-$bugunCiroResult = $conn->query("SELECT SUM(toplam_tutar) AS bugun_ciro FROM siparisler WHERE DATE(siparis_tarihi) = CURDATE()");
-$bugunCiro = $bugunCiroResult->fetch_assoc()["bugun_ciro"] ?? 0;
 
+// Bugünkü ciro
+$bugunCiroResult = $conn->query("
+    SELECT SUM(toplam_tutar) AS bugun_ciro 
+    FROM siparisler
+    WHERE DATE(siparis_tarihi) = CURDATE()
+    AND durum != 'İptal Edildi'
+");
+
+$bugunCiro = $bugunCiroResult->fetch_assoc()["bugun_ciro"] ?? 0;
 // Son sıparısler
 $sonSiparisler = $conn->query(" SELECT id, musteri_ad_soyad, masa_no, adres, toplam_tutar, durum, siparis_tarihi FROM siparisler ORDER BY id DESC LIMIT 5 ");
 if (!$sonSiparisler) {
@@ -165,7 +176,7 @@ function durumClass($durum) {
         <div class="card">
             <div class="card-title">Toplam Ciro</div>
             <div class="card-value orange">
-                <?php echo number_format((float)$toplamCiro,2); ?> TL
+                <?php echo number_format($toplamCiro, 2); ?>TL
             </div>
         </div>
 
